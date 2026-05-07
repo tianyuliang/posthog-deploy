@@ -72,7 +72,19 @@ bash scripts/init-volumes.sh
 
 会按 `.env` 里的 `DATA_ROOT`（默认 `./data`）创建 13 个子目录。**首次启动前必须执行一次** —— 因 compose 用 bind mount 把每个命名卷指向具体路径，路径不存在 `docker-compose up` 会失败。
 
-### 4. 启动
+### 4. macOS 本地开发（仅 Mac 用户需要执行）
+
+**Linux 部署可跳过此步**。
+
+ClickHouse 在 macOS Docker Desktop 的 osxfs/VirtioFS bind mount 上跑 `CREATE OR REPLACE VIEW` 会触发 atomic rename bug（`Code: 57 UUID collision` 或 `Code: 1001 filesystem error: in rename`），导致迁移失败。需要把 ClickHouse 数据卷切换为 Docker named volume：
+
+```bash
+cp docker-compose.override.yaml.example docker-compose.override.yaml
+```
+
+`docker compose up` 会自动 merge override 文件，把 `clickhouse-data` 改为 named volume（数据存于 Docker 内部 ext4，不经过 macOS 文件系统）。该文件已在 `.gitignore` 中。
+
+### 5. 启动
 
 ```bash
 docker-compose up -d
@@ -80,7 +92,7 @@ docker-compose up -d
 
 首次启动会拉镜像 + 跑迁移，大约需要 **5–10 分钟**（国内网络下 GHCR 镜像可能需更久，详见 [镜像版本](#镜像版本)）。
 
-### 5. 验证
+### 6. 验证
 
 ```bash
 # 看所有服务状态

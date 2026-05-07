@@ -3,6 +3,10 @@
 .env.local
 *.env.local
 
+# 本地 docker compose 覆盖（如 macOS 切换 ClickHouse 卷为 named volume）
+docker-compose.override.yaml
+docker-compose.override.yml
+
 # 运行时数据卷（Postgres / ClickHouse / Kafka 等）
 data/
 

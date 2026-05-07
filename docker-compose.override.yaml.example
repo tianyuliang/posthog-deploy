@@ -1,0 +1,26 @@
+# =============================================================
+# macOS 本地开发覆盖配置
+# =============================================================
+# 复制为 docker-compose.override.yaml（无 .example 后缀），
+# docker compose 会自动 merge 这个文件覆盖 docker-compose.yaml 的对应配置。
+# .gitignore 已忽略 docker-compose.override.yaml,不会被推到仓库。
+#
+# 用途：
+#   将 ClickHouse 数据卷从 bind mount 切换为 Docker named volume,
+#   避开 macOS Docker Desktop 的 osxfs/VirtioFS 文件系统在
+#   ClickHouse `CREATE OR REPLACE VIEW` atomic rename 上的兼容性 bug
+#   （症状：Code: 57 Mapping for table with UUID already exists,
+#         或 Code: 1001 filesystem error: in rename No such file or directory）
+#
+# 使用：
+#   cp docker-compose.override.yaml.example docker-compose.override.yaml
+#   docker compose up -d
+#
+# Linux 部署不需要这个文件。
+
+volumes:
+    clickhouse-data:
+        driver: local
+        # 移除 driver_opts 即变为标准 Docker named volume
+        # 数据存于 /var/lib/docker/volumes/posthog-deploy_clickhouse-data/_data
+        driver_opts: !reset null

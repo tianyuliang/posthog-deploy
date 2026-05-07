@@ -52,7 +52,7 @@ services:
             - redis7-data:/data
 
     clickhouse:
-        image: clickhouse/clickhouse-server:24.8
+        image: clickhouse/clickhouse-server:26.3.9.8
         restart: on-failure
         logging: *default-logging
         environment:
