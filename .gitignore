@@ -1,0 +1,18 @@
+# 敏感配置 — 包含 POSTHOG_SECRET / ENCRYPTION_SALT_KEYS 等密钥
+.env
+.env.local
+*.env.local
+
+# 运行时数据卷（Postgres / ClickHouse / Kafka 等）
+data/
+
+# GeoIP 数据库（运行时下载，体积大，按 README 第 1 步下载）
+share/GeoLite2-City.mmdb
+share/*.mmdb
+
+# 系统/编辑器产物
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*~
